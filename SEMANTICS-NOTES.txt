@@ -1,0 +1,8 @@
+SEMANTIC-NOTES
+-------------------
+
+We implemented all of the semantic checks outlined on the spec. 
+We also added an additional check for the duplicate class name declarations, method name declarations, and variable declarations.
+
+In terms of any changes to the previous parts, we made a few changes to our parser and scanner.
+We fixed our grammar precedence and also updated our regex for a comment to fix an issue in Project 2.

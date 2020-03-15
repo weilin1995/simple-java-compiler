@@ -1,0 +1,15 @@
+CSE 401/M501 Project - Final Compiler
+
+No type error when an overriding method declares a return type not a subtype
+of the base method's declared return type.
+
+Generated code behaves incorrectly when the source program involves field
+shadowing.
+
+Syntax error on some floating-point literals.
+
+Total: 96/100
+
+Support for double arrays and Math.sqrt.
+
+Extra: +2

@@ -1,0 +1,6 @@
+CSE 401/M501 Project I - Scanner
+
+Our testing didn't reveal any problems with the correctness of your scanner.
+Nice work!
+
+Total: 40/40

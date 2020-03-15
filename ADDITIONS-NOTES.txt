@@ -1,0 +1,53 @@
+Note about linking:
+————————————————————————
+We implemented the extra credit for Math.sqrt and double arrays. 
+To do this we rely on the C math library, which has to be linked in as part of the GCC build.
+
+To build with GCC we created object files for all the various c files in src/runtime/*.c. 
+When linking the objects into a executable it's needed to use the -lm flag to include the math library. 
+
+```
+cd src/runtime
+
+# create object files for number_converter and boot.c
+gcc -Wall -std=c11 -c number_converter.c
+gcc -Wall -std=c11 -c boot.c
+
+# run minijava compiler and output assembly to a file > out.S
+
+# link with -lm option
+gcc -Wall -std=c11 -o out src/runtime/number_converter.o src/runtime/boot.o out.S -lm 
+```
+
+————————————————————————
+Changes made:
+
+To implement doubles we had to go through all aspects of the compilers. 
+For the scanner we added a new double literal and regex to match it. We also added new AST nodes for double.
+We also added the necessary codegen changes and new functions in boot.c to handle some aspects of doubles (such as addition and multiplication).
+
+————————————————————————
+
+Extra credit:
+
+For extra credit we implemented double arrays and a Math.sqrt function for doubles. 
+This involved also making changes in all parts of the compilers. 
+We added new nodes to the AST, NewDoubleArray, DoubleArrayType. We also added a new node Sqrt for the Math.sqrt function. 
+We also had to go through and add various checks in the semantic checker and codegen to get all this new functionality working.
+
+————————————————————————
+
+CSEM501 Masters Project:
+
+We also made changes to implement our 5th year masters project (see more details in the report).
+We implemented source to source translation of MiniJava code to the python programming language.
+
+To use it we added a new -PY flag. Here is an example:
+```
+java -cp build/classes:lib/java-cup-11b.jar MiniJava -PY SamplePrograms/SampleMiniJavaPrograms/LinearSearch.java > LinearSearch.py
+```
+
+Then you can look at the output python program and run it with:
+```
+python3 LinearSearch.py
+```

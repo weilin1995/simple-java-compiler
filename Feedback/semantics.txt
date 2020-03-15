@@ -1,0 +1,30 @@
+CSE 401/M501 Project III - Semantics
+
+Typechecker sets exit status incorrectly (1 if any lexical/syntactic/semantic
+errors or 0 if no errors at all). (-4)
+
+Uniqueness of field names not checked; typechecker should report an error when a
+class declares multiple fields with the same name (okay to shadow superclass's
+declared fields). (-2)
+
+Number of arguments to a method call is not checked. (-2)
+
+Type of an if statement's condition is not checked. (-2)
+
+False type error reported when a subclass declares a field with the same name
+as a field in the superclass (shadowing is allowed). (-2)
+
+False type error reported when the target of a method call is inherited by the
+receiver's declared class type (e.g., '(new A()).m()' where class 'A' extends
+class 'B', which defines method 'm'). (-2)
+
+False type error reported when a method body returns a subtype of the declared
+return type. (-2)
+
+False type error reported when an overriding method declares its return type as
+a subtype of the overridden method's declared return type. (-2)
+
+Typechecker crashes with an unhandled NullPointerException when the source
+program references an undefined class type. (-4)
+
+Total: 38/60

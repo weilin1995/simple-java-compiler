@@ -1,0 +1,5 @@
+CSE 401/M501 Project V - Floating Point
+
+Syntax error on some floating-point literals, e.g., '5.5E+3' or '4.'. (-2)
+
+Total: 18/20

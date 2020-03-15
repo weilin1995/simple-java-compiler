@@ -1,0 +1,22 @@
+CSE 401 Project IV - Code Generation
+
+Incorrect order-of-operations within an arithmetic expression; subexpressions
+at the same precedence level (e.g., all operands to a multiplication) should be
+evaluated left-to-right. (-2)
+
+Boolean conjunction does not have proper short-circuit behavior; if 'e1'
+in 'e1 && e2' reduces to 'false', then 'e2' should not even be evaluated. (-2)
+
+Incorrect behavior of boolean conjunction; '0 < 1 && true && a < 5', where 'a'
+was previously initialized to 0, should evaluate to 'true' (may help to know
+that the expression was the condition in an 'if' statement). (-2)
+
+Incorrect behavior of loop conditions; the condition expression in a 'while'
+loop should be evaluated once per loop test, including any method calls with
+side effects. (-4)
+
+Shadowing fields are not kept distinct; if a class and its parent both have a
+field 'int x', then the object layout will have two distinct fields, one for the
+parent class's use and another for the child class's use. (-2)
+
+Total: 48/60

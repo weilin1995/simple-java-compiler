@@ -1,0 +1,23 @@
+CSE 401/M501 Project II - Parser
+
+Arithmetic operators should bind more tightly than Boolean operators. (-2)
+
+Comparison operators (e.g., less than) should bind more tightly than Boolean operators (but less tightly than arithmetic operators). (-2)
+
+Subscripts should bind more tightly than binary operators. (-2)
+
+Method calls should bind more tightly than binary operators. (-1)
+
+Field accesses should bind more tightly than binary operators. (-1)
+
+Statements in a block were printed in reverse order. (-2)
+
+Arguments of a method call were printed in reverse order. (-2)
+
+Parameters of a method declaration were printed in reverse order. (-2)
+
+The parser crashed on well-formed syntax, specifically when a comment separated "public" from "static void main". The error output suggests that the grammar could not shift the STATIC token. (-4)
+
+Avoid superfluous output, like "Parsing completed." (-0)
+
+Total: 42/60

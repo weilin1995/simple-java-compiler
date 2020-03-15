@@ -1,0 +1,19 @@
+CODEGEN-NOTES
+
+We implemented code generation mostly following the spec posted online.
+We generate X86 assembly using the registers to pass arguments. 
+
+The tricky parts involved debugging issues that came up as part of the project.
+
+Most of the issues came from overriding registers with other data, and the fix,
+usually involved pushing the old register data before overriding it.
+
+We tested our code gen on various small test programs we made as well
+as all of Sample Programs in MiniJavaPrograms. 
+
+There is a small bash script (./allPrograms.sh) that we made to run all of the 
+SampleMiniJavaPrograms, under normal java and our MiniJava compilier to make
+sure there no differences.
+
+In terms of changes made to past parts of the project, we fixed a few issues,
+that were pointed out as part of the Semantic checker.

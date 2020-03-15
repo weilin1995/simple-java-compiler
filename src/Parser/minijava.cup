@@ -1,0 +1,342 @@
+/**
+ * CUP specification of the language grammar for a simple demo language.
+ * Change this into the language grammar of MiniJava for your implementation.
+ *
+ * CSE 401/M501/P501 18sp
+ */
+
+package Parser;
+
+import AST.*;
+import java.util.*;
+import java_cup.runtime.*;
+
+/* Terminals (lexical tokens returned by the scanner): */
+
+/* reserved words */
+terminal CLASS;
+terminal PUBLIC;
+terminal STATIC;
+terminal VOID;
+terminal MAIN;
+terminal STRING;
+terminal EXTENDS;
+terminal PRINTLN;
+terminal SQRT;
+terminal IF;
+terminal ELSE;
+terminal WHILE;
+terminal TRUE;
+terminal FALSE;
+terminal NEW;
+terminal BOOLEAN;
+terminal INT;
+terminal DOUBLE;
+terminal THIS;
+terminal RETURN;
+terminal LENGTH;
+//terminal EOF;
+
+/* operators */
+terminal PLUS, MINUS, BECOMES, MULTIPLY, LESSTHAN, AND, NOT;
+
+/* delimiters */
+terminal LPAREN, RPAREN, SEMICOLON, LBRACE, RBRACE, LBRACKET, RBRACKET, DOT, COMMA;
+
+/* identifiers */
+terminal String IDENTIFIER;
+terminal int INTEGER_LITERAL;
+terminal double DOUBLE_LITERAL;
+
+/* Nonterminals (constructed by parser): */
+
+// OLD STUFF
+/*
+nonterminal List<Statement> Program;
+nonterminal Statement Statement;
+nonterminal Assign AssignStatement;
+nonterminal Display DisplayStatement;
+nonterminal Exp Expression;
+nonterminal Identifier Identifier;
+*/
+
+nonterminal Program Program;
+nonterminal MainClass MainClass;
+nonterminal ClassDeclList ClassDeclarationList;
+nonterminal VarDeclList VarDeclarationList;
+nonterminal FormalList FormalList;
+nonterminal StatementList StatementList;
+nonterminal Exp Expression;
+nonterminal ExpList ExpressionList;
+nonterminal MethodDeclList MethodDeclarationList;
+nonterminal ClassDecl ClassDeclaration;
+nonterminal MethodDecl MethodDeclaration;
+nonterminal VarDecl VarDeclaration;
+nonterminal Formal Formal;
+nonterminal Statement Statement;
+nonterminal Identifier Identifier;
+nonterminal Type Type;
+nonterminal Exp ExpressionTerm;
+
+/* Precedence declarations: */
+/* Modeled after https://introcs.cs.princeton.edu/java/11precedence/ */
+
+/* Precedence declarations have to be listed from lowest to highest */
+precedence right BECOMES;
+precedence left AND;
+precedence right NOT;
+precedence left LESSTHAN;
+precedence left  PLUS, MINUS;
+precedence left  MULTIPLY;
+precedence left DOT;
+precedence left LBRACKET;
+
+/*
+src/AST: 
+├── ASTNode.java 
+├── And.java Done(Expression)
+├── ArrayAssign.java - Done (Statement)
+├── ArrayLength.java Done(Expression)
+├── ArrayLookup.java Done(Expression)
+├── Assign.java
+├── Block.java - Done (Statement)
+├── BooleanType.java - DONE (Type)
+├── Call.java Done(Expression)
+├── ClassDecl.java
+├── ClassDeclExtends.java - DONE (ClassDeclarationList)
+├── ClassDeclList.java - DONE (ClassDeclarationList)
+├── ClassDeclSimple.java
+├── Display.java
+├── Exp.java Done
+├── ExpList.java Done
+├── False.java
+├── Formal.java - DONE (Formal)
+├── FormalList.java - Done (FormalList)
+├── Identifier.java - DONE (Identifier)
+├── IdentifierExp.java
+├── IdentifierType.java - Done (Type)
+├── If.java - Done (Statement)
+├── IntArrayType.java - Done (Type)
+├── IntegerLiteral.java Done(expression)
+├── IntegerType.java - Done (Type)
+├── LessThan.java Done(expression)
+├── MainClass.java - DONE (MainClass)
+├── MethodDecl.java - Done (MethodDeclaration)
+├── MethodDeclList.java - Done (MethodDeclarationList)
+├── Minus.java Done(expression)
+├── NewArray.java Done(expression)
+├── NewObject.java Done(expression)
+├── Not.java Done(expression)
+├── Plus.java Done(expression)
+├── Print.java - Done (Statement)
+├── Program.java - DONE (Program)
+├── Statement.java - DONE (Statement)
+├── StatementList.java - DONE (StatementList)
+├── This.java Done(expression)
+├── Times.java Done(expression)
+├── True.java Done(expression)
+├── Type.java
+├── VarDecl.java - DONE (VarDeclaration)
+├── VarDeclList.java - Done (VarDeclarationList)
+└── While.java - DONE (Statement)
+*/ 
+
+/* Productions: */
+
+Program   ::= MainClass:mainClass ClassDeclarationList:classDeclarationList
+              {: RESULT = new Program(mainClass, classDeclarationList, mainClassxleft); :}
+              ;
+
+MainClass ::= CLASS Identifier:identifier1 LBRACE PUBLIC STATIC VOID MAIN LPAREN STRING LBRACKET RBRACKET Identifier:identifier2 RPAREN LBRACE Statement:statement RBRACE RBRACE
+              {: RESULT = new MainClass(identifier1, identifier2, statement, identifier1xleft); :}
+              ;
+
+ClassDeclarationList ::= ClassDeclarationList:classDeclarationList ClassDeclaration:classDeclaration
+                         {: classDeclarationList.add(classDeclaration); RESULT = classDeclarationList; :}
+                         |
+                         /* EMPTY */
+                         {: RESULT = new ClassDeclList(new Location(0, 0)); :}
+                         ;
+
+ClassDeclaration ::= CLASS Identifier:identifier1 EXTENDS Identifier:identifier2 LBRACE VarDeclarationList:varDeclarationList MethodDeclarationList:methodDeclarationList RBRACE
+                     {: RESULT = new ClassDeclExtends(identifier1, identifier2, varDeclarationList, methodDeclarationList, identifier1xleft); :}
+                     |
+                     CLASS Identifier:identifier1 LBRACE VarDeclarationList:varDeclarationList MethodDeclarationList:methodDeclarationList RBRACE
+                     {: RESULT = new ClassDeclSimple(identifier1, varDeclarationList, methodDeclarationList, identifier1xleft); :}
+                     ;
+
+
+VarDeclarationList ::= VarDeclarationList:varDeclarationList VarDeclaration:varDeclaration
+                       {: varDeclarationList.add(varDeclaration); RESULT = varDeclarationList; :}
+                       |
+                       /* EMPTY */
+                       {: RESULT = new VarDeclList(new Location(0, 0)); :}
+                       ;
+
+VarDeclaration ::= Type:type Identifier:identifier SEMICOLON
+                   {: RESULT = new VarDecl(type, identifier, typexleft); :}
+                   ;
+
+Type ::=
+         INT:intArrayType LBRACKET RBRACKET
+         {: RESULT = new IntArrayType(intArrayTypexleft); :}
+         |
+         DOUBLE:doubleArrayType LBRACKET RBRACKET
+         {: RESULT = new DoubleArrayType(doubleArrayTypexleft); :}
+         |
+         BOOLEAN:booleanType
+         {: RESULT = new BooleanType(booleanTypexleft); :}
+         |
+         INT:intType
+         {: RESULT = new IntegerType(intTypexleft); :}
+         |
+         DOUBLE:doubleType
+         {: RESULT = new DoubleType(doubleTypexleft); :}
+         |
+         Identifier:identifierType
+         {: RESULT = new IdentifierType(identifierType.s, identifierTypexleft); :}
+         ;
+
+Identifier ::= IDENTIFIER:identifier
+               {: RESULT = new Identifier(identifier, identifierxleft); :}
+               ;
+
+MethodDeclarationList ::= MethodDeclarationList:methodDeclarationList MethodDeclaration:methodDeclaration
+                          {: methodDeclarationList.add(methodDeclaration); RESULT = methodDeclarationList; :}
+                          |
+                          /* Empty */
+                          {: RESULT = new MethodDeclList(new Location(0, 0)); :}
+                          ;
+
+MethodDeclaration ::= PUBLIC Type:type Identifier:identifier LPAREN FormalList:formalList RPAREN LBRACE VarDeclarationList:varDeclarationList StatementList:statementList RETURN Expression:expression SEMICOLON RBRACE
+                      {: RESULT = new MethodDecl(type, identifier, formalList, varDeclarationList, statementList, expression, typexleft); :}
+                      ;
+
+StatementList ::= Statement:statement StatementList:statementList 
+                  {: statementList.add(statement); RESULT = statementList; :}
+                  |
+                  /* EMPTY */
+                  {: RESULT = new StatementList(new Location(0, 0)); :}
+                  ;
+/*
+src/AST/ArrayAssign.java:6:public class ArrayAssign extends Statement {
+src/AST/Assign.java:6:public class Assign extends Statement {
+src/AST/Block.java:6:public class Block extends Statement {
+src/AST/Display.java:6:public class Display extends Statement {
+src/AST/If.java:6:public class If extends Statement { OK
+src/AST/Print.java:6:public class Print extends Statement {
+src/AST/While.java:6:public class While extends Statement { OK
+*/
+
+Statement ::=  LBRACE StatementList:statementList RBRACE
+               {: RESULT = new Block(statementList, statementListxleft); :}
+               |
+               WHILE LPAREN Expression:expression RPAREN Statement:statement
+               {: RESULT = new While(expression, statement, expressionxleft); :}
+               |
+               PRINTLN LPAREN Expression:expression RPAREN SEMICOLON
+               {: RESULT = new Print(expression, expressionxleft); :}
+               |
+               Identifier:identifier BECOMES Expression:expression SEMICOLON
+               {: RESULT = new Assign(identifier, expression, identifierxleft); :}
+               |
+               Identifier:identifier LBRACKET Expression:expression1 RBRACKET BECOMES Expression:expression2 SEMICOLON
+               {: RESULT = new ArrayAssign(identifier, expression1, expression2, identifierxleft); :}
+               |
+               IF LPAREN Expression:expression RPAREN Statement:statement1 ELSE Statement:statement2
+               {: RESULT = new If(expression, statement1, statement2, expressionxleft); :}
+               ;
+
+ExpressionList ::= Expression:expression COMMA ExpressionList:expressionList
+               {: expressionList.add(expression); RESULT = expressionList; :}
+               |
+               Expression:expression
+               {: ExpList expList = new ExpList(new Location(0, 0)); expList.add(expression); RESULT = expList; :}
+               ;
+
+// ./src/AST/IdentifierExp.java:6:public class IdentifierExp extends Exp {
+// ./src/AST/This.java:6:public class This extends Exp {
+// ./src/AST/True.java:6:public class True extends Exp {
+// ./src/AST/NewArray.java:6:public class NewArray extends Exp {
+// ./src/AST/LessThan.java:6:public class LessThan extends Exp {
+// ./src/AST/IntegerLiteral.java:6:public class IntegerLiteral extends Exp {
+// ./src/AST/False.java:6:public class False extends Exp {
+// ./src/AST/Times.java:6:public class Times extends Exp {
+// ./src/AST/And.java:6:public class And extends Exp {
+// ./src/AST/Call.java:6:public class Call extends Exp {
+// ./src/AST/ArrayLookup.java:6:public class ArrayLookup extends Exp {
+// ./src/AST/Minus.java:6:public class Minus extends Exp {
+// ./src/AST/Not.java:6:public class Not extends Exp {
+// ./src/AST/ArrayLength.java:6:public class ArrayLength extends Exp {
+// ./src/AST/NewObject.java:6:public class NewObject extends Exp {
+// ./src/AST/Plus.java:6:public class Plus extends Exp {
+
+Expression ::= Expression: exp1 PLUS Expression: exp2
+               {:RESULT = new Plus(exp1, exp2, exp1xleft);:}
+               |
+               Expression: exp1 MINUS Expression: exp2
+               {:RESULT = new Minus(exp1, exp2, exp1xleft);:}
+               |
+               Expression: exp1 MULTIPLY Expression: exp2
+               {:RESULT = new Times(exp1, exp2, exp1xleft);:}
+               |
+               Expression: exp1 AND Expression: exp2
+               {:RESULT = new And(exp1, exp2, exp1xleft);:}
+               |
+               Expression: exp1 LESSTHAN Expression: exp2
+               {:RESULT = new LessThan(exp1, exp2, exp1xleft);:}
+               |
+               SQRT LPAREN Expression:expression RPAREN
+               {: RESULT = new Sqrt(expression, expressionxleft); :}
+               |
+               Expression : expression1 LBRACKET Expression : expression2 RBRACKET
+               {: RESULT = new ArrayLookup(expression1, expression2, expression1xleft); :}
+               | Expression: expression DOT LENGTH
+               {: RESULT = new ArrayLength(expression, expressionxleft); :}
+               | Expression : expression DOT Identifier:methodName LPAREN ExpressionList:expLst RPAREN
+               {: RESULT = new Call(expression, methodName, expLst, expressionxleft); :}
+               | Expression : expression DOT Identifier:methodName LPAREN RPAREN
+               {: ExpList emptyList = new ExpList(new Location(0, 0)); RESULT = new Call(expression, methodName, emptyList, expressionxleft); :}
+               | ExpressionTerm : term
+               {: RESULT = term; :}
+               | NOT Expression: expression
+               {: RESULT = new Not(expression, expressionxleft); :}
+               ;
+
+ExpressionTerm ::=
+               INTEGER_LITERAL : num
+               {: RESULT = new IntegerLiteral(num, numxleft); :}
+               |
+               DOUBLE_LITERAL : num
+               {: RESULT = new DoubleLiteral(num, numxleft); :}
+               | TRUE : t
+               {: RESULT = new True(txleft); :}
+               | FALSE: f
+               {: RESULT = new False(fxleft); :}
+               | IDENTIFIER:name
+               {: RESULT = new IdentifierExp(name, namexleft); :}
+               | THIS: that
+               {: RESULT = new This(thatxleft); :}
+               | NEW INT LBRACKET Expression: expression RBRACKET
+               {: RESULT = new NewArray(expression, expressionxleft); :}
+               | NEW DOUBLE LBRACKET Expression: expression RBRACKET
+               {: RESULT = new NewDoubleArray(expression, expressionxleft); :}
+               | NEW Identifier:className LPAREN RPAREN
+               {: RESULT = new NewObject(className, classNamexleft); :}
+               | LPAREN Expression: expression RPAREN
+               {: RESULT = expression; :}
+               ;
+
+FormalList ::= Formal:formal COMMA FormalList:formalList
+               {: formalList.add(formal); RESULT = formalList; :}
+               | 
+               Formal:formal
+               {: FormalList formalList = new FormalList(new Location(0, 0)); formalList.add(formal); RESULT = formalList;:}
+               |
+               /* EMPTY */
+               {: RESULT = new FormalList(new Location(0, 0)); :}
+               ;
+
+Formal ::= Type:type Identifier:identifier
+           {: RESULT = new Formal(type, identifier, typexleft); :};
+

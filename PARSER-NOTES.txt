@@ -1,0 +1,11 @@
+We had to make a few changes to the original posted MiniJava grammer to get it to work in CUP.
+
+For example, the original parts that had a wild card *, we used a list. For example, (Statement)* is part of the MethodDeclaration, and when we used StatementList, which is just a production that produces statement recursively.
+Similarly, we have the same thing for ExpressionList and FormalList.
+We also factored out all the basic building block of expression into a product called ExpressionTerm, and leave everything else inside Expression.
+
+We also defined the precedences in the cup so that it knows how to resolve shift and reduce conflicts.
+
+We also made an ASTVisitor class that can print out an AST Tree of the parsed grammar.
+
+We did not have any conflicts for the final results.
