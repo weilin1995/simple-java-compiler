@@ -92,14 +92,12 @@ public class MiniJava {
 
             // create a scanner on the input file
             ComplexSymbolFactory sf = new ComplexSymbolFactory();
-//            Reader in = new BufferedReader(new InputStreamReader(System.in));
             Reader in = br;
             scanner s = new scanner(in, sf);
             parser p = new parser(s, sf);
             Symbol root;
             // replace p.parse() with p.debug_parse() in next line to see trace of
             // parser shift/reduce actions during parse
-//            root = p.parse();
 
             if (debug) {
                 root = p.debug_parse();
@@ -136,14 +134,12 @@ public class MiniJava {
 
             // create a scanner on the input file
             ComplexSymbolFactory sf = new ComplexSymbolFactory();
-//            Reader in = new BufferedReader(new InputStreamReader(System.in));
             Reader in = br;
             scanner s = new scanner(in, sf);
             parser p = new parser(s, sf);
             Symbol root;
             // replace p.parse() with p.debug_parse() in next line to see trace of
             // parser shift/reduce actions during parse
-//            root = p.parse();
 
             if (debug) {
                 root = p.debug_parse();
@@ -204,14 +200,12 @@ public class MiniJava {
 
             // create a scanner on the input file
             ComplexSymbolFactory sf = new ComplexSymbolFactory();
-//            Reader in = new BufferedReader(new InputStreamReader(System.in));
             Reader in = br;
             scanner s = new scanner(in, sf);
             parser p = new parser(s, sf);
             Symbol root;
             // replace p.parse() with p.debug_parse() in next line to see trace of
             // parser shift/reduce actions during parse
-//            root = p.parse();
 
             if (debug) {
                 root = p.debug_parse();
@@ -305,14 +299,12 @@ public class MiniJava {
 
             // create a scanner on the input file
             ComplexSymbolFactory sf = new ComplexSymbolFactory();
-//            Reader in = new BufferedReader(new InputStreamReader(System.in));
             Reader in = br;
             scanner s = new scanner(in, sf);
             parser p = new parser(s, sf);
             Symbol root;
             // replace p.parse() with p.debug_parse() in next line to see trace of
             // parser shift/reduce actions during parse
-//            root = p.parse();
 
             if (debug) {
                 root = p.debug_parse();
